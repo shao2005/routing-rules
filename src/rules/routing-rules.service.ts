@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateRoutingRuleDto } from './dto/create-routing-rule.dto';
-import { PrismaService } from 'prisma/prisma.service';
+import { CreateRoutingRuleDto } from './dto/create-routing-rule.dto.js';
+import { PrismaService } from '../../prisma/prisma.service.js';
 
 @Injectable()
 export class RoutingRulesService {

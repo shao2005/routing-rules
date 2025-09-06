@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { RoutingRulesModule } from './rules/routing-rules.module';
-import { PrismaModule } from 'prisma/prisma.module';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { RoutingRulesModule } from './rules/routing-rules.module.js';
+import { PrismaModule } from '../prisma/prisma.module.js';
 
 @Module({
   imports: [RoutingRulesModule, PrismaModule],

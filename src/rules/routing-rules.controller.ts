@@ -7,8 +7,8 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 
-import { CreateRoutingRuleDto } from './dto/create-routing-rule.dto';
-import { RoutingRulesService } from './routing-rules.service';
+import { CreateRoutingRuleDto } from './dto/create-routing-rule.dto.js';
+import { RoutingRulesService } from './routing-rules.service.js';
 
 @Controller('routing-rules')
 export class RoutingRulesController {
