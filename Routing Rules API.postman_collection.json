@@ -1,0 +1,143 @@
+{
+  "info": {
+    "_postman_id": "6e24033d-e609-4841-8f5f-1eb6ebdfa4f5",
+    "name": "Routing Rules API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+    "_exporter_id": "38282471"
+  },
+  "item": [
+    {
+      "name": "Get routing rule by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/routing-rules/:id",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["routing-rules", ":id"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get all routing rules",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "http://localhost:3000/routing-rules/"
+      },
+      "response": []
+    },
+    {
+      "name": "Update Routing Rule",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Updated Routing Rules\",\n    \"description\": \"Updated description\",\n    \"defaultMemberId\": \"member-alon\",\n    \"rules\": [\n        {\n            \"memberId\": \"member-eldad\",\n            \"statements\": [\n                {\n                    \"field\": \"contactCountry\",\n                    \"operator\": \"=\",\n                    \"value\": \"US\"\n                }\n            ]\n        },\n        {\n            \"memberId\": \"member-stav\",\n            \"statements\": [\n                {\n                    \"field\": \"companyIndustry\",\n                    \"operator\": \"=\",\n                    \"value\": \"BROADCAST_MEDIA\"\n                }\n            ]\n        }\n    ]\n}"
+        },
+        "url": "http://localhost:3000/routing-rules/2"
+      },
+      "response": []
+    },
+    {
+      "name": "Create routing rule",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Example Routing Rule\",\n    \"description\": \"Test routing rule\",\n    \"defaultMemberId\": \"member-stav\",\n    \"rules\": [\n        {\n            \"memberId\": \"member-eldad\",\n            \"statements\": [\n                {\n                    \"field\": \"contactCountry\",\n                    \"operator\": \"=\",\n                    \"value\": \"US\"\n                },\n                {\n                    \"field\": \"contactCountry\",\n                    \"operator\": \"=\",\n                    \"value\": \"IL\"\n                },\n                {\n                    \"field\": \"contactName\",\n                    \"operator\": \"=\",\n                    \"value\": \"Wix\"\n                },\n                {\n                    \"field\": \"companyHQCountry\",\n                    \"operator\": \"=\",\n                    \"value\": \"GR\"\n                }\n            ]\n        },\n        {\n            \"memberId\": \"member-alon\",\n            \"statements\": [\n                {\n                    \"field\": \"companyIndustry\",\n                    \"operator\": \"=\",\n                    \"value\": \"ACCOUNTING\"\n                },\n                {\n                    \"field\": \"companyHQCountry\",\n                    \"operator\": \"=\",\n                    \"value\": \"GR\"\n                }\n            ]\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "http://localhost:3000/routing-rules/"
+      },
+      "response": []
+    },
+    {
+      "name": "Create Routing Rule 2",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"name\": \"Example Routing Rules\",\n    \"description\": \"Test rules for assignment\",\n    \"defaultMemberId\": \"member-alon\",\n    \"rules\": [\n        {\n            \"memberId\": \"member-stav\",\n            \"statements\": [\n                {\n                    \"field\": \"contactCountry\",\n                    \"operator\": \"=\",\n                    \"value\": \"US\"\n                },\n                {\n                    \"field\": \"companyHQCountry\",\n                    \"operator\": \"=\",\n                    \"value\": \"Germany\"\n                }\n            ]\n        },\n        {\n            \"memberId\": \"member-eldad\",\n            \"statements\": [\n                {\n                    \"field\": \"companyIndustry\",\n                    \"operator\": \"=\",\n                    \"value\": \"ACCOUNTING\"\n                }\n            ]\n        }\n    ]\n}"
+        },
+        "url": "http://localhost:3000/routing-rules"
+      },
+      "response": []
+    },
+    {
+      "name": "Evaluate member",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"contactCountry\": \"US\",\n  \"companySize\": 150,\n  \"companyHQCountry\": \"GR\",\n  \"companyIndustry\": \"ACCOUNTING\",\n  \"companyName\": \"Wix\",\n  \"contactDevice\": \"PC\",\n  \"firstPage\": \"https://www.example.com/start\",\n  \"firstSeen\": \"2025-08-01T12:00:00Z\",\n  \"lastSeen\": \"2025-09-01T12:00:00Z\"\n}\n"
+        },
+        "url": {
+          "raw": "http://localhost:3000/routing-rules/:id/evaluate",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["routing-rules", ":id", "evaluate"],
+          "variable": [
+            {
+              "key": "id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "port",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

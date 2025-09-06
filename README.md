@@ -1,98 +1,139 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Routing Rules Backend Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project implements a flexible routing rules engine backend using NestJS, Prisma ORM, and PostgreSQL. It allows managing routing rules that assign team members to contacts based on configurable conditions in the contact or company data.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Create, update, and retrieve routing rules with nested logical conditions.
+- Evaluate incoming contact information against routing rules to get the assigned member.
+- Persist rules configuration in PostgreSQL for durability.
+- Type-safe Prisma integration with NestJS.
+- REST API with JSON input/output.
 
-## Project setup
+---
 
-```bash
-$ npm install
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- PostgreSQL (running instance)
+- npm package manager
+- Postman (for API testing)
+
+---
+
+### Setup and Run Locally
+
+1. Clone the repository:
+
+```
+git clone https://github.com/shao2005/routing-rules.git
+cd routing-rules
 ```
 
-## Compile and run the project
+2. Install dependencies:
 
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+```
+npm install
 ```
 
-## Run tests
+3. Configure the database connection:
 
-```bash
-# unit tests
-$ npm run test
+Create a `.env` file to set your PostgreSQL connection string:
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```
+DATABASE_URL="postgresql://user:password@localhost:5432/routing_rules_db"
 ```
 
-## Deployment
+4. Run Prisma migrations to create the database schema:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+```
+npx prisma migrate dev --name init
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+5. Generate Prisma client (if not done by migrate):
 
-## Resources
+```
+npx prisma generate
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+6. Start the NestJS service:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```
+npm run start
+```
 
-## Support
+The server will start on http://localhost:3000 by default.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
+## API Endpoints
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Create Routing Rule
 
-## License
+- **POST /routing-rules**
+- Body: JSON representing routing rule with nested rules & statements.
+- Returns created rule with IDs.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Update Routing Rule
+
+- **PUT /routing-rules/:id**
+- Path param: `id` of the routing rule.
+- Body: JSON with updated routing rule data.
+- Returns updated rule with IDs.
+
+### Get Routing Rule by ID
+
+- **GET /routing-rules/:id**
+- Path param: `id` of the routing rule.
+- Returns the routing rule with nested rules and statements.
+
+### Evaluate Contact Info
+
+- **POST /routing-rules/:id/evaluate**
+- Path param: `id` of the routing rule.
+- Body: JSON with contact information fields.
+- Returns the assigned member id based on evaluation.
+
+---
+
+## Using Postman Collection
+
+A Postman collection is provided to help testing the API.
+
+### Import Collection
+
+1. Open Postman.
+2. Click "Import".
+3. Upload the JSON file of the collection.
+4. Click "Import".
+5. The collection "Routing Rules API" appears in your Postman workspace.
+
+### Test Workflow
+
+1. Use **Create Routing Rule** to create a new rule.
+2. Use returned ID in **Update Routing Rule** and **Evaluate Contact Info** requests by replacing the `:id` path parameter.
+3. Send requests to test API functions.
+
+---
+
+## Notes
+
+- Ensure your PostgreSQL instance is running before migration.
+- The server listens on port 3000 by default; change this via `PORT` environment variable.
+- Input validation is applied using `class-validator`.
+- The evaluation logic supports strings, numbers, and dates with operators `=`, `>`, and `<`.
+
+---
+
+## Scripts
+
+- `npm run start` — start production server.
+- `npm run start:dev` — start dev server with hot reload.
+- `npx prisma migrate dev` — run migrations.
+- `npx prisma generate` — generate Prisma client.
+
+---
