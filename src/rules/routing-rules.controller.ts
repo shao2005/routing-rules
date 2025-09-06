@@ -9,6 +9,7 @@ import {
 
 import { CreateRoutingRuleDto } from './dto/create-routing-rule.dto.js';
 import { RoutingRulesService } from './routing-rules.service.js';
+import { EvaluateContactDto } from './dto/evaluate-contact.dto.js';
 
 @Controller('routing-rules')
 export class RoutingRulesController {
@@ -27,5 +28,17 @@ export class RoutingRulesController {
   @Get()
   async findAll() {
     return this.routingRulesService.findAll();
+  }
+
+  @Post(':id/evaluate')
+  async evaluate(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() contactInfo: EvaluateContactDto,
+  ) {
+    const memberId = await this.routingRulesService.evaluateRule(
+      id,
+      contactInfo,
+    );
+    return { memberId };
   }
 }

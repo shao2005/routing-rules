@@ -1,6 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateRoutingRuleDto } from './dto/create-routing-rule.dto.js';
+import {
+  CreateRoutingRuleDto,
+  Operator,
+} from './dto/create-routing-rule.dto.js';
 import { PrismaService } from '../../prisma/prisma.service.js';
+import { EvaluateContactDto } from './dto/evaluate-contact.dto';
+
+type ContactValue = string | number | Date | undefined;
+
+const mapStatementOperatorToOperator = {
+  '=': Operator.EQ,
+  '>': Operator.GT,
+  '<': Operator.LT,
+};
 
 @Injectable()
 export class RoutingRulesService {
@@ -51,5 +63,111 @@ export class RoutingRulesService {
     });
 
     return routingRulesSet;
+  }
+
+  private compare(
+    inputValue: ContactValue,
+    operator: Operator,
+    expectedStatementValue: string,
+  ): boolean {
+    if (inputValue === undefined) return false;
+
+    if (typeof inputValue === 'number') {
+      const expectedNum = Number(expectedStatementValue);
+      if (isNaN(expectedNum)) return false;
+      switch (operator) {
+        case Operator.EQ:
+          return inputValue === expectedNum;
+        case Operator.GT:
+          return inputValue > expectedNum;
+        case Operator.LT:
+          return inputValue < expectedNum;
+        default:
+          return false;
+      }
+    }
+
+    if (inputValue instanceof Date) {
+      const expectedDate = new Date(expectedStatementValue);
+      if (isNaN(expectedDate.getTime())) return false;
+      switch (operator) {
+        case Operator.EQ:
+          return inputValue.getTime() === expectedDate.getTime();
+        case Operator.GT:
+          return inputValue.getTime() > expectedDate.getTime();
+        case Operator.LT:
+          return inputValue.getTime() < expectedDate.getTime();
+        default:
+          return false;
+      }
+    }
+
+    switch (operator) {
+      case Operator.EQ:
+        return (
+          String(inputValue).toLowerCase() ===
+          expectedStatementValue.toLowerCase()
+        );
+      default:
+        return false;
+    }
+  }
+
+  async evaluateRule(
+    ruleId: number,
+    contact: EvaluateContactDto,
+  ): Promise<string> {
+    const ruleSet = await this.findOne(ruleId);
+
+    for (const rule of ruleSet.rules) {
+      const isMatch = rule.statements.some((stmt) => {
+        let inputValue: ContactValue = undefined;
+
+        switch (stmt.field) {
+          case 'contactCountry':
+            inputValue = contact.contactCountry;
+            break;
+          case 'companySize':
+            inputValue = contact.companySize;
+            break;
+          case 'companyHQCountry':
+            inputValue = contact.companyHQCountry;
+            break;
+          case 'companyIndustry':
+            inputValue = contact.companyIndustry;
+            break;
+          case 'companyName':
+            inputValue = contact.companyName;
+            break;
+          case 'contactDevice':
+            inputValue = contact.contactDevice;
+            break;
+          case 'firstPage':
+            inputValue = contact.firstPage;
+            break;
+          case 'firstSeen':
+            inputValue = contact.firstSeen
+              ? new Date(contact.firstSeen)
+              : undefined;
+            break;
+          case 'lastSeen':
+            inputValue = contact.lastSeen
+              ? new Date(contact.lastSeen)
+              : undefined;
+            break;
+          default:
+            return false;
+        }
+
+        const statementOperator = mapStatementOperatorToOperator[stmt.operator];
+        return this.compare(inputValue, statementOperator, stmt.value);
+      });
+
+      if (isMatch) {
+        return rule.memberId;
+      }
+    }
+
+    return ruleSet.defaultMemberId;
   }
 }

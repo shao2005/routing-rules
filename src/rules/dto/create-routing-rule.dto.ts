@@ -7,6 +7,12 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
+export enum Operator {
+  EQ = '=',
+  GT = '>',
+  LT = '<',
+}
+
 export class StatementDto {
   @IsString()
   field: string;
