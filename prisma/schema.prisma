@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model RoutingRule {
+  id              Int      @id @default(autoincrement())
+  name            String
+  description     String?
+  defaultMemberId String // Member ID for default rule
+  rules           Rule[]
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Rule {
+  id            Int    @id @default(autoincrement())
+  routingRuleId Int
+  memberId      String
+
+  // Each Rule has many Statements
+  statements Statement[]
+
+  routingRule RoutingRule @relation(fields: [routingRuleId], references: [id])
+
+  @@index([routingRuleId])
+}
+
+model Statement {
+  id       Int    @id @default(autoincrement())
+  ruleId   Int
+  field    String // e.g. "contactCountry"
+  operator String // e.g. "=", ">", "<"
+  value    String // stored as string for simplicity, parse as needed
+
+  rule Rule @relation(fields: [ruleId], references: [id])
+
+  @@index([ruleId])
+}
