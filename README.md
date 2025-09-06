@@ -106,7 +106,7 @@ A Postman collection is provided to help testing the API.
 
 ### Import Collection
 
-1. Download `Routing_rules_postman_collection.json` file for this repository.
+1. Download `Routing_rules_postman_collection.json` file from this repository.
 2. Open Postman.
 3. Click "Import".
 4. Upload the JSON file.
