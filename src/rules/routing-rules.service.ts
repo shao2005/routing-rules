@@ -5,6 +5,7 @@ import {
 } from './dto/create-routing-rule.dto.js';
 import { PrismaService } from '../../prisma/prisma.service.js';
 import { EvaluateContactDto } from './dto/evaluate-contact.dto';
+import { UpdateRoutingRuleDto } from './dto/update-routing-rule.dto';
 
 type ContactValue = string | number | Date | undefined;
 
@@ -63,6 +64,51 @@ export class RoutingRulesService {
     });
 
     return routingRulesSet;
+  }
+
+  async update(id: number, updateDto: UpdateRoutingRuleDto) {
+    const existingRule = await this.prisma.routingRule.findUnique({
+      where: { id },
+      include: { rules: { include: { statements: true } } },
+    });
+
+    if (!existingRule) {
+      throw new NotFoundException(`Routing rule ${id} not found`);
+    }
+
+    // For simplicity, remove existing rules and statements, then recreate
+    await this.prisma.statement.deleteMany({
+      where: { ruleId: { in: existingRule.rules.map((r) => r.id) } },
+    });
+
+    await this.prisma.rule.deleteMany({
+      where: { routingRuleId: id },
+    });
+
+    // Now update routingRule general fields and recreate rules/statements
+    const updatedRule = await this.prisma.routingRule.update({
+      where: { id },
+      data: {
+        name: updateDto.name,
+        description: updateDto.description,
+        defaultMemberId: updateDto.defaultMemberId,
+        rules: {
+          create: updateDto.rules?.map((rule) => ({
+            memberId: rule.memberId,
+            statements: {
+              create: rule.statements.map((stmt) => ({
+                field: stmt.field,
+                operator: stmt.operator,
+                value: stmt.value,
+              })),
+            },
+          })),
+        },
+      },
+      include: { rules: { include: { statements: true } } },
+    });
+
+    return updatedRule;
   }
 
   private compare(
